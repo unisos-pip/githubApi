@@ -261,7 +261,7 @@ def examples_githubApiAccess():
     apiUrl_oneRepo = "https://api.github.com/repos/mohsenBanan/ReposOverview"                      
 
 
-####+BEGIN: bx:icm:python:cmnd:subSection :title "List Repos Of Users"
+####+BEGINNOT: bx:icm:python:cmnd:subSection :title "List Repos Of Users"
     """
 **  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *List Repos Of User*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
 """
@@ -272,7 +272,7 @@ def examples_githubApiAccess():
     cmndArgs = apiUrl_reposOfUser ; cps = cpsInit()
     menuItem(verbosity='none')
 
-####+BEGIN: bx:icm:python:cmnd:subSection :title "List Orgs Of Users"
+####+BEGINNOT: bx:icm:python:cmnd:subSection :title "List Orgs Of Users"
     """
 **  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *List Orgs Of Users*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
 """
@@ -283,7 +283,7 @@ def examples_githubApiAccess():
     cmndArgs = apiUrl_orgsOfUser; cps = cpsInit()
     menuItem(verbosity='none')
 
-####+BEGIN: bx:icm:python:cmnd:subSection :title "List Repos Of Orgs"
+####+BEGINNOT: bx:icm:python:cmnd:subSection :title "List Repos Of Orgs"
     """
 **  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *List Repos Of Orgs*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
 """
@@ -294,7 +294,7 @@ def examples_githubApiAccess():
     cmndArgs = apiUrl_oneOrg; cps = cpsInit()
     menuItem(verbosity='none')
 
-####+BEGIN: bx:icm:python:cmnd:subSection :title "Repos Info"
+####+BEGINNOT: bx:icm:python:cmnd:subSection :title "Repos Info"
     """
 **  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *Repos Info*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
 """
@@ -306,7 +306,7 @@ def examples_githubApiAccess():
     menuItem(verbosity='none')
 
 
-####+BEGIN: bx:icm:python:cmnd:subSection :title "Pipeline Examples"
+####+BEGINNOT: bx:icm:python:cmnd:subSection :title "Pipeline Examples"
     """
 **  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *Pipeline Examples*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
 """
@@ -463,7 +463,7 @@ class listOrgsOfUsers(icm.Cmnd):
                         print(eachOrg["url"])
             else:
                 print "API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text))
-                return None
+                return(icm.EH_badOutcome(cmndOutcome))                
 
         return cmndOutcome.set(
             opError=icm.OpError.Success,
@@ -549,11 +549,11 @@ class listReposOfOrgs(icm.Cmnd):
                         print(eachRepo["url"])
             else:
                 print "API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text))
-                return None
+                return(icm.EH_badOutcome(cmndOutcome))
 
         return cmndOutcome.set(
             opError=icm.OpError.Success,
-            opResults=None,
+            opResults=opResults,
         )
 
 ####+BEGIN: bx:icm:python:method :methodName "cmndArgsSpec" :methodType "anyOrNone" :retType "bool" :deco "default" :argsList ""
@@ -633,7 +633,7 @@ class reposInfo(icm.Cmnd):
                     repoInfoProc(responseBody)        
             else:
                 print "API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text))
-                return None
+                return(icm.EH_badOutcome(cmndOutcome))
 
         return cmndOutcome.set(
             opError=icm.OpError.Success,

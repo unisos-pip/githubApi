@@ -336,18 +336,60 @@ class examples(icm.Cmnd):
 ####+END:
         githubApiLib.examples_githubApiAccess()
 
-####+BEGIN: bx:icm:python:cmnd:subSection :title "Github Reports"
+####+BEGIN: bx:icm:python:cmnd:subSection :title "Github Repos Of Orgs Of Users Reports"
         """
-**  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *Github Reports*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
+**  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *Github Repos Of Orgs Of Users Reports*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
 """
 ####+END:
-        icm.cmndExampleMenuChapter('*Github Reports*')
+        icm.cmndExampleMenuChapter('*Github Repos Of Orgs Of Users Reports*')
 
-        cmndName = "orgsOfUsersReport"
+        cmndName = "reposOfOrgsOfUsersReport"
         cmndArgs = apiUrl_orgsOfUser
         cps = cpsInit(); cps["reportFormat"] = "latex"
         menuItem(verbosity='none')
         
+####+BEGIN: bx:icm:python:cmnd:subSection :title "Github Repos Of Orgs Reports"
+        """
+**  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *Github Reports*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
+"""
+####+END:
+        icm.cmndExampleMenuChapter('*Github Repos Of Orgs Reports*')
+
+        cmndName = "reposOfOrgsReport"
+        cmndArgs = apiUrl_oneOrg
+        cps = cpsInit(); cps["reportFormat"] = "latex"
+        menuItem(verbosity='none')
+        
+####+BEGIN: bx:icm:python:cmnd:subSection :title "Github Repos Reports"
+        """
+**  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *Github Repos Reports*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
+"""
+####+END:
+        icm.cmndExampleMenuChapter('*Github Repos Of Orgs Reports*')
+
+        cmndName = "reposReport"
+        cmndArgs = apiUrl_oneRepo
+        cps = cpsInit(); cps["reportFormat"] = "latex"
+        menuItem(verbosity='none')
+
+####+BEGIN: bx:icm:python:cmnd:subSection :title "Pipeline Examples"
+        """
+**  [[elisp:(beginning-of-buffer)][Top]] ============== [[elisp:(blee:ppmm:org-mode-toggle)][Nat]] [[elisp:(delete-other-windows)][(1)]]          *Pipeline Examples*  [[elisp:(org-cycle)][| ]]  [[elisp:(org-show-subtree)][|=]] 
+"""
+####+END:
+        icm.cmndExampleMenuChapter('*Combined Pipeline Example*')
+
+        execLineEx("""cp /dev/null githubReport.tex""")
+        thisFile = __file__
+        #thisFile = __main__.__file__
+        execLineEx("""{thisFile} -i listOrgsOfUsers {apiUrl_orgsOfUser} | xargs -n  3 {thisFile2} -i reposOfOrgsReport |  tee -a githubReport.tex"""
+                   .format(
+                       thisFile=thisFile,
+                       apiUrl_orgsOfUser=apiUrl_orgsOfUser,
+                       thisFile2=thisFile,
+                   )
+        )
+         
         
 #####+BEGIN: bx:icm:python:cmnd:subSection :title "Remain In Sycn With Template"
         """
@@ -386,11 +428,11 @@ class examples(icm.Cmnd):
 ####+END:
 
 
-####+BEGIN: bx:icm:python:cmnd:classHead :cmndName "orgsOfUsersReport" :comment "" :parsMand "" :parsOpt "reportFormat" :argsMin "0" :argsMax "9999" :asFunc "" :interactiveP ""
+####+BEGIN: bx:icm:python:cmnd:classHead :cmndName "reposOfOrgsOfUsersReport" :comment "" :parsMand "" :parsOpt "reportFormat" :argsMin "0" :argsMax "9999" :asFunc "" :interactiveP ""
 """
-*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]]  ICM-Cmnd       :: /orgsOfUsersReport/ parsMand= parsOpt=reportFormat argsMin=0 argsMax=9999 asFunc= interactive=  [[elisp:(org-cycle)][| ]]
+*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]]  ICM-Cmnd       :: /reposOfOrgsOfUsersReport/ parsMand= parsOpt=reportFormat argsMin=0 argsMax=9999 asFunc= interactive=  [[elisp:(org-cycle)][| ]]
 """
-class orgsOfUsersReport(icm.Cmnd):
+class reposOfOrgsOfUsersReport(icm.Cmnd):
     cmndParamsMandatory = [ ]
     cmndParamsOptional = [ 'reportFormat', ]
     cmndArgsLen = {'Min': 0, 'Max': 9999,}
@@ -430,6 +472,9 @@ class orgsOfUsersReport(icm.Cmnd):
 
         orgsOfUsers = outcome.results
 
+        if not orgsOfUsers:
+            return(icm.EH_badOutcome(outcome))
+
         for userUrl, orgsOfThisUser in orgsOfUsers.iteritems():
             for eachOrg in orgsOfThisUser:
                 #pprint.pprint(eachOrg)                
@@ -442,17 +487,23 @@ class orgsOfUsersReport(icm.Cmnd):
                 if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
 
                 reposOfOrgs = outcome.results
+
+                if not reposOfOrgs:
+                    continue
                 				 
                 for apiUrlOfOrg, reposOfThisOrg in reposOfOrgs.iteritems():
                     for eachRepo in reposOfThisOrg:
                         apiUrlOfRepo = eachRepo["url"]
                         outcome = githubApiLib.reposInfo().cmnd(
                             interactive=False,
-                            argsList=[apiUrlOfOrg],
+                            argsList=[apiUrlOfRepo],
                         ).log()
                         if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
 
                         reposInfo = outcome.results
+
+                        if not reposInfo:
+                            continue
                         
                         for apiUrlOfRepo, infoForThisRepo in reposInfo.iteritems():
                             reportProduce_repo(infoForThisRepo, reportFormat) 
@@ -495,6 +546,194 @@ class orgsOfUsersReport(icm.Cmnd):
 """
 
 
+####+BEGIN: bx:icm:python:cmnd:classHead :cmndName "reposOfOrgsReport" :comment "" :parsMand "" :parsOpt "reportFormat" :argsMin "0" :argsMax "9999" :asFunc "" :interactiveP ""
+"""
+*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]]  ICM-Cmnd       :: /reposOfOrgsReport/ parsMand= parsOpt=reportFormat argsMin=0 argsMax=9999 asFunc= interactive=  [[elisp:(org-cycle)][| ]]
+"""
+class reposOfOrgsReport(icm.Cmnd):
+    cmndParamsMandatory = [ ]
+    cmndParamsOptional = [ 'reportFormat', ]
+    cmndArgsLen = {'Min': 0, 'Max': 9999,}
+
+    @icm.subjectToTracking(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmnd(self,
+        interactive=False,        # Can also be called non-interactively
+        reportFormat=None,         # or Cmnd-Input
+        argsList=[],         # or Args-Input
+    ):
+        cmndOutcome = self.getOpOutcome()
+        if interactive:
+            if not self.cmndLineValidate(outcome=cmndOutcome):
+                return cmndOutcome
+            effectiveArgsList = G.icmRunArgsGet().cmndArgs
+        else:
+            effectiveArgsList = argsList
+
+        callParamsDict = {'reportFormat': reportFormat, }
+        if not icm.cmndCallParamsValidate(callParamsDict, interactive, outcome=cmndOutcome):
+            return cmndOutcome
+        reportFormat = callParamsDict['reportFormat']
+
+        cmndArgsSpecDict = self.cmndArgsSpec()
+        if not self.cmndArgsValidate(effectiveArgsList, cmndArgsSpecDict, outcome=cmndOutcome):
+            return cmndOutcome
+####+END:
+        cmndArgs = self.cmndArgsGet("0&9999", cmndArgsSpecDict, effectiveArgsList)
+
+        opResults = {}
+
+        outcome = githubApiLib.listReposOfOrgs().cmnd(
+            interactive=False,
+            argsList=cmndArgs,
+        ).log()
+        if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
+
+        reposOfOrgs = outcome.results
+
+        if not reposOfOrgs:
+            return(icm.EH_badOutcome(outcome))            
+
+        for apiUrlOfOrg, reposOfThisOrg in reposOfOrgs.iteritems():
+            for eachRepo in reposOfThisOrg:
+                apiUrlOfRepo = eachRepo["url"]
+                outcome = githubApiLib.reposInfo().cmnd(
+                    interactive=False,
+                    argsList=[apiUrlOfRepo],
+                ).log()
+                if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
+
+                reposInfo = outcome.results
+
+                if not reposInfo:
+                    continue
+
+                for apiUrlOfRepo, infoForThisRepo in reposInfo.iteritems():
+                    reportProduce_repo(infoForThisRepo, reportFormat) 
+
+        return cmndOutcome.set(
+            opError=icm.OpError.Success,
+            opResults=opResults,
+        )
+
+####+BEGIN: bx:icm:python:method :methodName "cmndArgsSpec" :methodType "anyOrNone" :retType "bool" :deco "default" :argsList ""
+    """
+**  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]]  Method-anyOrNone :: /cmndArgsSpec/ retType=bool argsList=nil deco=default  [[elisp:(org-cycle)][| ]]
+"""
+    @icm.subjectToTracking(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmndArgsSpec(self):
+####+END:        
+        """
+***** Cmnd Args Specification
+"""
+        cmndArgsSpecDict = icm.CmndArgsSpecDict()
+        cmndArgsSpecDict.argsDictAdd(
+            argPosition="0&9999",
+            argName="cmndArgs",
+            argChoices=[],
+            argDescription="Exec all or those specified as functions.",
+        )
+
+        return cmndArgsSpecDict
+
+
+####+BEGIN: bx:icm:python:method :methodName "cmndDocStr" :methodType "anyOrNone" :retType "bool" :deco "default" :argsList ""
+    """
+**  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]]  Method-anyOrNone :: /cmndDocStr/ retType=bool argsList=nil deco=default  [[elisp:(org-cycle)][| ]]
+"""
+    @icm.subjectToTracking(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmndDocStr(self):
+####+END:        
+        return """
+***** TODO [[elisp:(org-cycle)][| *CmndDesc:* | ]]  Place holder for this commands doc string.
+"""
+
+####+BEGIN: bx:icm:python:cmnd:classHead :cmndName "reposReport" :comment "" :parsMand "" :parsOpt "reportFormat" :argsMin "0" :argsMax "9999" :asFunc "" :interactiveP ""
+"""
+*  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]]  ICM-Cmnd       :: /reposReport/ parsMand= parsOpt=reportFormat argsMin=0 argsMax=9999 asFunc= interactive=  [[elisp:(org-cycle)][| ]]
+"""
+class reposReport(icm.Cmnd):
+    cmndParamsMandatory = [ ]
+    cmndParamsOptional = [ 'reportFormat', ]
+    cmndArgsLen = {'Min': 0, 'Max': 9999,}
+
+    @icm.subjectToTracking(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmnd(self,
+        interactive=False,        # Can also be called non-interactively
+        reportFormat=None,         # or Cmnd-Input
+        argsList=[],         # or Args-Input
+    ):
+        cmndOutcome = self.getOpOutcome()
+        if interactive:
+            if not self.cmndLineValidate(outcome=cmndOutcome):
+                return cmndOutcome
+            effectiveArgsList = G.icmRunArgsGet().cmndArgs
+        else:
+            effectiveArgsList = argsList
+
+        callParamsDict = {'reportFormat': reportFormat, }
+        if not icm.cmndCallParamsValidate(callParamsDict, interactive, outcome=cmndOutcome):
+            return cmndOutcome
+        reportFormat = callParamsDict['reportFormat']
+
+        cmndArgsSpecDict = self.cmndArgsSpec()
+        if not self.cmndArgsValidate(effectiveArgsList, cmndArgsSpecDict, outcome=cmndOutcome):
+            return cmndOutcome
+####+END:
+        cmndArgs = self.cmndArgsGet("0&9999", cmndArgsSpecDict, effectiveArgsList)
+
+        opResults = {}
+
+        outcome = githubApiLib.reposInfo().cmnd(
+            interactive=False,
+            argsList=cmndArgs,
+        ).log()
+        if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
+
+        reposInfo = outcome.results
+
+        if not reposInfo:
+            return(icm.EH_badOutcome(outcome))            
+
+        for apiUrlOfRepo, infoForThisRepo in reposInfo.iteritems():
+            reportProduce_repo(infoForThisRepo, reportFormat) 
+
+        return cmndOutcome.set(
+            opError=icm.OpError.Success,
+            opResults=opResults,
+        )
+
+####+BEGIN: bx:icm:python:method :methodName "cmndArgsSpec" :methodType "anyOrNone" :retType "bool" :deco "default" :argsList ""
+    """
+**  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]]  Method-anyOrNone :: /cmndArgsSpec/ retType=bool argsList=nil deco=default  [[elisp:(org-cycle)][| ]]
+"""
+    @icm.subjectToTracking(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmndArgsSpec(self):
+####+END:        
+        """
+***** Cmnd Args Specification
+"""
+        cmndArgsSpecDict = icm.CmndArgsSpecDict()
+        cmndArgsSpecDict.argsDictAdd(
+            argPosition="0&9999",
+            argName="cmndArgs",
+            argChoices=[],
+            argDescription="Exec all or those specified as functions.",
+        )
+
+        return cmndArgsSpecDict
+
+
+####+BEGIN: bx:icm:python:method :methodName "cmndDocStr" :methodType "anyOrNone" :retType "bool" :deco "default" :argsList ""
+    """
+**  [[elisp:(org-cycle)][| ]] [[elisp:(org-show-subtree)][|=]] [[elisp:(show-children 10)][|V]] [[elisp:(bx:orgm:indirectBufOther)][|>]] [[elisp:(bx:orgm:indirectBufMain)][|I]] [[elisp:(blee:ppmm:org-mode-toggle)][|N]] [[elisp:(org-top-overview)][|O]] [[elisp:(progn (org-shifttab) (org-content))][|C]] [[elisp:(delete-other-windows)][|1]]  Method-anyOrNone :: /cmndDocStr/ retType=bool argsList=nil deco=default  [[elisp:(org-cycle)][| ]]
+"""
+    @icm.subjectToTracking(fnLoc=True, fnEntry=True, fnExit=True)
+    def cmndDocStr(self):
+####+END:        
+        return """
+***** TODO [[elisp:(org-cycle)][| *CmndDesc:* | ]]  Place holder for this commands doc string.
+"""
+
 
 ####+BEGIN: bx:icm:python:section :title "Supporting Classes And Functions"
 """
@@ -512,9 +751,27 @@ def reportProduce_org(
 ):
 ####+END:
    orgName = orgInfo['login']
-   orgDescription = orgInfo['description']
+   description = orgInfo['description']
+   if not description:
+       description = "Empty-At-This-Time"
+   
+   orgUrl = orgInfo['url']
+   
+   print(
+       """\
+\section{{Organization: {orgName}}}
 
-   print('section{orgName}'.format(orgName=orgName))
+\url{{{orgUrl}}}
+
+Description: {description}
+"""
+       .format(
+           orgName=orgName,
+           description=description,
+           orgUrl=orgUrl,
+       )
+   )
+   
 
 ####+BEGIN: bx:icm:python:func :funcName "reportProduce_repo" :funcType "anyOrNone" :retType "bool" :deco "" :argsList "repoInfo reportFormat"
 """
@@ -525,16 +782,35 @@ def reportProduce_repo(
     reportFormat,
 ):
 ####+END:
-   pprint.pprint(repoInfo)
+   repoName = repoInfo['name']   # eg overview
+   repoOrg = repoInfo['organization']['login']
+   description = repoInfo['description']
+   if not description:
+       description = "Empty-At-This-Time"
 
-   return
+   ssh_url = repoInfo['ssh_url']
+   html_url = repoInfo['html_url']
+   git_url = repoInfo['git_url']   
 
-   orgName = repoInfo['login']
-   orgDescription = repoInfo['description']
+   print(
+       """\
+\subsection{{Repository: {repoOrg}/{repoName}}}
 
-   print('subsection{orgName}'.format(orgName=orgName))
+SSH Url:  \url{{{ssh_url}}}
+HTML Url: \url{{{html_url}}}
+GIT Url:  \url{{{git_url}}}
 
-   print(repoInfo)
+Description: {description}
+"""
+       .format(
+           repoOrg=repoOrg,
+           repoName=repoName,
+           ssh_url=ssh_url,
+           html_url=html_url,
+           git_url=git_url,                      
+           description=description,
+       )
+   )
 
 
 ####+BEGIN: bx:icm:python:section :title "Common/Generic Facilities -- Library Candidates"
