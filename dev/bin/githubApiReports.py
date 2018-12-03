@@ -582,33 +582,46 @@ class reposOfOrgsReport(icm.Cmnd):
 
         opResults = {}
 
-        outcome = githubApiLib.listReposOfOrgs().cmnd(
-            interactive=False,
-            argsList=cmndArgs,
-        ).log()
-        if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
+        for eachOrgUrl in cmndArgs:
+            outcome = githubApiLib.orgsInfo().cmnd(
+                interactive=False,
+                argsList=[eachOrgUrl],
+            ).log()
+            if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
 
-        reposOfOrgs = outcome.results
+            orgsInfoDict = outcome.results
 
-        if not reposOfOrgs:
-            return(icm.EH_badOutcome(outcome))            
+            orgInfo = orgsInfoDict[eachOrgUrl]
+            
+            reportProduce_org(orgInfo, reportFormat)
 
-        for apiUrlOfOrg, reposOfThisOrg in reposOfOrgs.iteritems():
-            for eachRepo in reposOfThisOrg:
-                apiUrlOfRepo = eachRepo["url"]
-                outcome = githubApiLib.reposInfo().cmnd(
-                    interactive=False,
-                    argsList=[apiUrlOfRepo],
-                ).log()
-                if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
+            outcome = githubApiLib.listReposOfOrgs().cmnd(
+                interactive=False,
+                argsList=[eachOrgUrl],
+            ).log()
+            if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
 
-                reposInfo = outcome.results
+            reposOfOrgs = outcome.results
 
-                if not reposInfo:
-                    continue
+            if not reposOfOrgs:
+                return(icm.EH_badOutcome(outcome))            
 
-                for apiUrlOfRepo, infoForThisRepo in reposInfo.iteritems():
-                    reportProduce_repo(infoForThisRepo, reportFormat) 
+            for apiUrlOfOrg, reposOfThisOrg in reposOfOrgs.iteritems():
+                for eachRepo in reposOfThisOrg:
+                    apiUrlOfRepo = eachRepo["url"]
+                    outcome = githubApiLib.reposInfo().cmnd(
+                        interactive=False,
+                        argsList=[apiUrlOfRepo],
+                    ).log()
+                    if outcome.isProblematic(): return(icm.EH_badOutcome(outcome))
+
+                    reposInfo = outcome.results
+
+                    if not reposInfo:
+                        continue
+
+                    for apiUrlOfRepo, infoForThisRepo in reposInfo.iteritems():
+                        reportProduce_repo(infoForThisRepo, reportFormat) 
 
         return cmndOutcome.set(
             opError=icm.OpError.Success,
@@ -755,15 +768,17 @@ def reportProduce_org(
    if not description:
        description = "Empty-At-This-Time"
    
-   orgUrl = orgInfo['url']
+   orgUrl = orgInfo['html_url']
+
+   #pprint.pprint(orgInfo)
    
    print(
        """\
-\section{{Organization: {orgName}}}
+\subsection{{Organization: {orgName}}}
 
 \url{{{orgUrl}}}
 
-Description: {description}
+Github Organization Description: {description}
 """
        .format(
            orgName=orgName,
@@ -786,7 +801,7 @@ def reportProduce_repo(
    repoOrg = repoInfo['organization']['login']
    description = repoInfo['description']
    if not description:
-       description = "Empty-At-This-Time"
+       description = "Empty-For-Now"
 
    ssh_url = repoInfo['ssh_url']
    html_url = repoInfo['html_url']
@@ -794,13 +809,14 @@ def reportProduce_repo(
 
    print(
        """\
-\subsection{{Repository: {repoOrg}/{repoName}}}
+\subsubsection{{Repository: {repoOrg}/{repoName}}}
 
-SSH Url:  \url{{{ssh_url}}}
-HTML Url: \url{{{html_url}}}
-GIT Url:  \url{{{git_url}}}
+SSH Url:  \url{{{ssh_url}}}\\\\
+HTML Url: \url{{{html_url}}}\\\\
+GIT Url:  \url{{{git_url}}}\\\\
 
-Description: {description}
+
+Repository Description: {description}
 """
        .format(
            repoOrg=repoOrg,
