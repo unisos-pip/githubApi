@@ -410,7 +410,7 @@ class listReposOfUsers(icm.Cmnd):
             argPosition="0&9999",
             argName="cmndArgs",
             argChoices=[],
-            argDescription="Exec all or those specified as functions.",
+            argDescription="Exec those specified as functions.",
         )
 
         return cmndArgsSpecDict
