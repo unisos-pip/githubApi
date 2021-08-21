@@ -33,12 +33,12 @@ Installation
 
 ::
 
-    sudo pip install unisos.githubApi
+   sudo pip install unisos.githubApi
 
 Usage
 =====
 
 ::
 
-    ./bin/githubApiAccess.py
-    ./bin/githubApiReports.py
+   ./bin/githubApiAccess.py
+   ./bin/githubApiReports.py

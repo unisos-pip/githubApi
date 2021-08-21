@@ -1,0 +1,122 @@
+RefactoringTool: Skipping optional fixer: buffer
+RefactoringTool: Skipping optional fixer: idioms
+RefactoringTool: Skipping optional fixer: set_literal
+RefactoringTool: Skipping optional fixer: ws_comma
+RefactoringTool: Refactored ./githubApi/py3/bin/githubApiReports.py
+RefactoringTool: Files that were modified:
+RefactoringTool: ./githubApi/py3/bin/githubApiReports.py
+--- ./githubApi/py3/bin/githubApiReports.py	(original)
++++ ./githubApi/py3/bin/githubApiReports.py	(refactored)
+@@ -165,7 +165,7 @@
+             argChoices.pop(0)
+             actions = argChoices
+         for each in actions:
+-            print each
++            print(each)
+             if interactive:
+                 #print( str( __doc__ ) )  # This is the Summary: from the top doc-string
+                 #version(interactive=True)
+@@ -475,7 +475,7 @@
+         if not orgsOfUsers:
+             return(icm.EH_badOutcome(outcome))
+ 
+-        for userUrl, orgsOfThisUser in orgsOfUsers.iteritems():
++        for userUrl, orgsOfThisUser in orgsOfUsers.items():
+             for eachOrg in orgsOfThisUser:
+                 #pprint.pprint(eachOrg)                
+                 reportProduce_org(eachOrg, reportFormat)
+@@ -491,7 +491,7 @@
+                 if not reposOfOrgs:
+                     continue
+                 				 
+-                for apiUrlOfOrg, reposOfThisOrg in reposOfOrgs.iteritems():
++                for apiUrlOfOrg, reposOfThisOrg in reposOfOrgs.items():
+                     for eachRepo in reposOfThisOrg:
+                         apiUrlOfRepo = eachRepo["url"]
+                         outcome = githubApiLib.reposInfo().cmnd(
+@@ -505,7 +505,7 @@
+                         if not reposInfo:
+                             continue
+                         
+-                        for apiUrlOfRepo, infoForThisRepo in reposInfo.iteritems():
++                        for apiUrlOfRepo, infoForThisRepo in reposInfo.items():
+                             reportProduce_repo(infoForThisRepo, reportFormat) 
+ 
+         return cmndOutcome.set(
+@@ -606,7 +606,7 @@
+             if not reposOfOrgs:
+                 return(icm.EH_badOutcome(outcome))            
+ 
+-            for apiUrlOfOrg, reposOfThisOrg in reposOfOrgs.iteritems():
++            for apiUrlOfOrg, reposOfThisOrg in reposOfOrgs.items():
+                 for eachRepo in reposOfThisOrg:
+                     apiUrlOfRepo = eachRepo["url"]
+                     outcome = githubApiLib.reposInfo().cmnd(
+@@ -620,7 +620,7 @@
+                     if not reposInfo:
+                         continue
+ 
+-                    for apiUrlOfRepo, infoForThisRepo in reposInfo.iteritems():
++                    for apiUrlOfRepo, infoForThisRepo in reposInfo.items():
+                         reportProduce_repo(infoForThisRepo, reportFormat) 
+ 
+         return cmndOutcome.set(
+@@ -707,7 +707,7 @@
+         if not reposInfo:
+             return(icm.EH_badOutcome(outcome))            
+ 
+-        for apiUrlOfRepo, infoForThisRepo in reposInfo.iteritems():
++        for apiUrlOfRepo, infoForThisRepo in reposInfo.items():
+             reportProduce_repo(infoForThisRepo, reportFormat) 
+ 
+         return cmndOutcome.set(
+@@ -772,11 +772,11 @@
+ 
+    #pprint.pprint(orgInfo)
+    
+-   print(
++   print((
+        """\
+ \subsection{{Organization: {orgName}}}
+ 
+-\url{{{orgUrl}}}
++\\url{{{orgUrl}}}
+ 
+ Github Organization Description: {description}
+ """
+@@ -785,7 +785,7 @@
+            description=description,
+            orgUrl=orgUrl,
+        )
+-   )
++   ))
+    
+ 
+ ####+BEGIN: bx:icm:python:func :funcName "reportProduce_repo" :funcType "anyOrNone" :retType "bool" :deco "" :argsList "repoInfo reportFormat"
+@@ -807,13 +807,13 @@
+    html_url = repoInfo['html_url']
+    git_url = repoInfo['git_url']   
+ 
+-   print(
++   print((
+        """\
+ \subsubsection{{Repository: {repoOrg}/{repoName}}}
+ 
+-SSH Url:  \url{{{ssh_url}}}\\\\
+-HTML Url: \url{{{html_url}}}\\\\
+-GIT Url:  \url{{{git_url}}}\\\\
++SSH Url:  \\url{{{ssh_url}}}\\\\
++HTML Url: \\url{{{html_url}}}\\\\
++GIT Url:  \\url{{{git_url}}}\\\\
+ 
+ 
+ Repository Description: {description}
+@@ -826,7 +826,7 @@
+            git_url=git_url,                      
+            description=description,
+        )
+-   )
++   ))
+ 
+ 
+ ####+BEGIN: bx:icm:python:section :title "Common/Generic Facilities -- Library Candidates"

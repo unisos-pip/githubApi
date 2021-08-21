@@ -1,0 +1,101 @@
+RefactoringTool: Skipping optional fixer: buffer
+RefactoringTool: Skipping optional fixer: idioms
+RefactoringTool: Skipping optional fixer: set_literal
+RefactoringTool: Skipping optional fixer: ws_comma
+RefactoringTool: Refactored ./githubApi/py3/unisos/githubApi/githubApiLib.py
+RefactoringTool: Files that were modified:
+RefactoringTool: ./githubApi/py3/unisos/githubApi/githubApiLib.py
+--- ./githubApi/py3/unisos/githubApi/githubApiLib.py	(original)
++++ ./githubApi/py3/unisos/githubApi/githubApiLib.py	(refactored)
+@@ -172,7 +172,7 @@
+             argChoices.pop(0)
+             actions = argChoices
+         for each in actions:
+-            print each
++            print(each)
+             if interactive:
+                 #print( str( __doc__ ) )  # This is the Summary: from the top doc-string
+                 #version(interactive=True)
+@@ -384,9 +384,9 @@
+                 #pprint.pprint(responseBody)
+                 if interactive:
+                     for eachRepo in responseBody:
+-                        print(eachRepo["url"])
++                        print((eachRepo["url"]))
+             else:
+-                print "API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text))
++                print("API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text)))
+                 return None
+ 
+ 
+@@ -472,9 +472,9 @@
+                 #pprint.pprint(responseBody)
+                 if interactive:
+                     for eachOrg in responseBody:
+-                        print(eachOrg["url"])
++                        print((eachOrg["url"]))
+             else:
+-                print "API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text))
++                print("API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text)))
+                 return(icm.EH_badOutcome(cmndOutcome))                
+ 
+         return cmndOutcome.set(
+@@ -558,9 +558,9 @@
+                 #pprint.pprint(responseBody)
+                 if interactive:                
+                     for eachRepo in responseBody:
+-                        print(eachRepo["url"])
++                        print((eachRepo["url"]))
+             else:
+-                print "API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text))
++                print("API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text)))
+                 return(icm.EH_badOutcome(cmndOutcome))
+ 
+         return cmndOutcome.set(
+@@ -644,7 +644,7 @@
+                 if interactive:                
+                     repoInfoProc(responseBody)        
+             else:
+-                print "API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text))
++                print("API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text)))
+                 return(icm.EH_badOutcome(cmndOutcome))
+ 
+         return cmndOutcome.set(
+@@ -730,7 +730,7 @@
+                 if interactive:                
+                     repoInfoProc(responseBody)        
+             else:
+-                print "API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text))
++                print("API error. Status code = %s, response = %s" % (str(r.status_code), str(r.text)))
+                 return(icm.EH_badOutcome(cmndOutcome))
+ 
+         return cmndOutcome.set(
+@@ -787,7 +787,7 @@
+ ):
+ ####+END:
+    for each in orgsList:
+-       print(each["url"])
++       print((each["url"]))
+ 
+ 
+ ####+BEGIN: bx:icm:python:func :funcName "reposOfOrgProc" :funcType "anyOrNone" :retType "bool" :deco "" :argsList "reposList"
+@@ -799,7 +799,7 @@
+ ):
+ ####+END:
+    for each in reposList:
+-       print(each["url"])
++       print((each["url"]))
+ 
+ 
+ ####+BEGIN: bx:icm:python:func :funcName "repoInfoProc" :funcType "anyOrNone" :retType "bool" :deco "" :argsList "reposList"
+@@ -810,8 +810,8 @@
+     repoInfo,
+ ):
+ ####+END:
+-    print(repoInfo["url"])
+-    print(repoInfo["description"])    
++    print((repoInfo["url"]))
++    print((repoInfo["description"]))    
+ 
+ 
+     
